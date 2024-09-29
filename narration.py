@@ -41,18 +41,26 @@ def create(data, output_folder):
         n += 1
         output_file = os.path.join(output_folder, f"narration_{n}.mp3")
 
-        if narration_api == "openai":
-            audio = openai.audio.speech.create(
+        # if narration_api == "openai":
+        #     audio = openai.audio.speech.create(
+        #         input=element["content"],
+        #         model="tts-1",
+        #         voice="alloy",
+        #     )
+
+        #     audio.stream_to_file(output_file)
+        # else:
+        #     audio = elevenlabs.generate(
+        #         text=element["content"],
+        #         voice="Michael",
+        #         model="eleven_monolingual_v1"
+        #     )
+        #     save(audio, output_file)
+
+        audio = openai.audio.speech.create(
                 input=element["content"],
-                model="tts-1",
+                model="tts-1-hd",
                 voice="alloy",
             )
 
-            audio.stream_to_file(output_file)
-        else:
-            audio = elevenlabs.generate(
-                text=element["content"],
-                voice="Michael",
-                model="eleven_monolingual_v1"
-            )
-            save(audio, output_file)
+        audio.stream_to_file(output_file)
