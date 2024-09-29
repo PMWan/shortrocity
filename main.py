@@ -10,7 +10,7 @@ import narration
 import images
 import video
 import utils
-
+import upload
 
 def main(system_prompt, caption_settings):
 
@@ -27,7 +27,7 @@ def main(system_prompt, caption_settings):
     print("Generating script...")
 
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=[
             {
                 "role": "system",
@@ -63,7 +63,18 @@ def main(system_prompt, caption_settings):
     normalized_output_file = f"normalized_{output_file}"
     utils.normalize_sound(basedir, output_file, normalized_output_file)
 
-    print(f"DONE! Here's your video: {os.path.join(basedir, normalized_output_file)}")
+    print(f"DONE! Here's your generated video: {os.path.join(basedir, normalized_output_file)}")
+
+    print("Generating upload config...")
+    upload_config_file = utils.generate_upload_config(basedir)
+
+    print("Uploading video...")
+    youtube = upload.get_authenticated_service()
+    config = upload.load_config(upload_config_file)
+    if upload.upload_video(youtube, config) is True:
+        print(f"DONE! Uploaded video to YouTube")
+    else:
+        print(f"FAILED! Failed to upload video to YouTube")
 
 
 if __name__ == "__main__":
