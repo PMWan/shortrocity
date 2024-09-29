@@ -7,3 +7,4 @@ shorts/
 venv
 .vscode
 *secrets*
+*.pickle
