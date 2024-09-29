@@ -6,3 +6,4 @@ shorts/
 !requirements.txt
 venv
 .vscode
+*secrets*
