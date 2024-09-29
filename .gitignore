@@ -5,3 +5,4 @@ shorts/
 !response.txt
 !requirements.txt
 venv
+.vscode
