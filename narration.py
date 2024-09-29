@@ -1,13 +1,13 @@
-from elevenlabs.client import ElevenLabs
-from elevenlabs import save
+# from elevenlabs.client import ElevenLabs
+# from elevenlabs import save
 import openai
 import os
 
-elevenlabs = ElevenLabs(
-    api_key=os.getenv("ELEVEN_API_KEY")
-)
+# elevenlabs = ElevenLabs(
+#     api_key=os.getenv("ELEVEN_API_KEY")
+# )
 
-narration_api = "elevenlabs" # (or "openai")
+narration_api = "openai" # (or "elevenlabs")
 
 def parse(narration):
     data = []
