@@ -3,7 +3,6 @@
 from openai import OpenAI
 import time
 import json
-import sys
 import os
 
 import narration
@@ -11,6 +10,7 @@ import images
 import video
 import utils
 import upload
+import argparse
 
 def main(system_prompt, caption_settings):
 
@@ -35,7 +35,7 @@ def main(system_prompt, caption_settings):
             },
             {
                 "role": "user",
-                "content": f"Create a YouTube short narration on the following animal:{utils.pick_random_animal('animals.txt')}"
+                "content": f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
             }
         ]
     )
@@ -78,16 +78,17 @@ def main(system_prompt, caption_settings):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} <system_prompt_file> [caption_settings_file]")
-        sys.exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--system_prompt", type=str, required=True)
+    parser.add_argument("--caption_settings", type=str, required=False)
+    args = parser.parse_args()
 
-    with open(sys.argv[1]) as f:
+    with open(args.system_prompt) as f:
         system_prompt = f.read()
 
     caption_settings = {}
-    if len(sys.argv) > 2:
-        with open(sys.argv[2]) as f:
+    if args.caption_settings:
+        with open(args.caption_settings) as f:
             caption_settings = json.load(f)
 
     main(system_prompt, caption_settings)
