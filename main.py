@@ -12,7 +12,7 @@ import utils
 import upload
 import argparse
 
-def main(system_prompt, caption_settings):
+def main(system_prompt, user_prompt=None, caption_settings={}):
 
     client = OpenAI()
 
@@ -35,7 +35,7 @@ def main(system_prompt, caption_settings):
             },
             {
                 "role": "user",
-                "content": f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
+                "content": user_prompt if user_prompt else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
             }
         ]
     )
@@ -80,15 +80,18 @@ def main(system_prompt, caption_settings):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--system_prompt", type=str, required=True)
+    parser.add_argument("--user_prompt", type=str, required=False)
     parser.add_argument("--caption_settings", type=str, required=False)
     args = parser.parse_args()
 
     with open(args.system_prompt) as f:
         system_prompt = f.read()
 
+    user_prompt = args.user_prompt if args.user_prompt else None
+
     caption_settings = {}
     if args.caption_settings:
         with open(args.caption_settings) as f:
             caption_settings = json.load(f)
 
-    main(system_prompt, caption_settings)
+    main(system_prompt, user_prompt, caption_settings)
