@@ -1,6 +1,7 @@
 from openai import OpenAI
 import base64
 import os
+import argparse
 
 client = OpenAI()
 
@@ -31,3 +32,10 @@ def generate(prompt, output_file, size="1024x1792"):
     with open(output_file, "wb") as f:
         f.write(base64.b64decode(image_b64))
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prompt", type=str, required=True)
+    parser.add_argument("--output_file", type=str, required=True)
+    args = parser.parse_args()
+    generate(args.prompt, args.output_file)
