@@ -1,6 +1,12 @@
 import random
 import subprocess
 import os
+from openai import OpenAI
+import json
+import dotenv
+
+dotenv.load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def pick_random_animal(file_path):
@@ -36,10 +42,7 @@ def normalize_sound(basedir, input_file, output_file):
 
 
 def generate_upload_config(basedir):
-    from openai import OpenAI
-    import json
 
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     with open(os.path.join(basedir, "response.txt"), 'r') as file:
         script = file.read()
 

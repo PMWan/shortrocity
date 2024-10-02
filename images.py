@@ -2,7 +2,9 @@ from openai import OpenAI
 import base64
 import os
 import argparse
+import dotenv
 
+dotenv.load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def create_from_data(data, output_dir):

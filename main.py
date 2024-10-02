@@ -13,11 +13,10 @@ import upload
 import argparse
 import dotenv
 
+dotenv.load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def main(system_prompt, user_prompt=None, caption_settings={}):
-    dotenv.load_dotenv()
-
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     short_id = str(int(time.time()))
 
