@@ -39,7 +39,7 @@ def generate_upload_config(basedir):
     from openai import OpenAI
     import json
 
-    client = OpenAI()
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     with open(os.path.join(basedir, "response.txt"), 'r') as file:
         script = file.read()
 

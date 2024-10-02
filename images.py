@@ -3,7 +3,7 @@ import base64
 import os
 import argparse
 
-client = OpenAI()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def create_from_data(data, output_dir):
     if not os.path.exists(output_dir):
