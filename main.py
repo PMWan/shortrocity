@@ -11,8 +11,11 @@ import video
 import utils
 import upload
 import argparse
+import dotenv
+
 
 def main(system_prompt, user_prompt=None, caption_settings={}):
+    dotenv.load_dotenv()
 
     client = OpenAI()
 
