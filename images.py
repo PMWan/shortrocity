@@ -8,7 +8,7 @@ import requests
 from openai import OpenAI
 
 dotenv.load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def create_from_data(data, output_dir):
@@ -31,20 +31,20 @@ def create_from_data(data, output_dir):
         save_image_from_flux_url(image_url, os.path.join(output_dir, image_name))
 
 
-def generate_using_dall_e(prompt, output_file, size="1024x1792"):
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt=prompt,
-        size=size,
-        quality="standard",
-        response_format="b64_json",
-        n=1,
-    )
+# def generate_using_dall_e(prompt, output_file, size="1024x1792"):
+#     response = client.images.generate(
+#         model="dall-e-3",
+#         prompt=prompt,
+#         size=size,
+#         quality="standard",
+#         response_format="b64_json",
+#         n=1,
+#     )
 
-    image_b64 = response.data[0].b64_json
+#     image_b64 = response.data[0].b64_json
 
-    with open(output_file, "wb") as f:
-        f.write(base64.b64decode(image_b64))
+#     with open(output_file, "wb") as f:
+#         f.write(base64.b64decode(image_b64))
 
 
 def generate_using_flux(prompt: str, aspect_ratio="9:16") -> str:
