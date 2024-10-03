@@ -1,5 +1,5 @@
 import argparse
-import base64
+# import base64
 import os
 
 import dotenv
