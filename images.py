@@ -1,11 +1,12 @@
 import argparse
-# import base64
 import os
 
 import dotenv
 import replicate
 import requests
-from openai import OpenAI
+
+# import base64
+# from openai import OpenAI
 
 dotenv.load_dotenv()
 # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
