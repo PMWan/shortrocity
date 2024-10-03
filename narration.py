@@ -1,33 +1,40 @@
 # from elevenlabs.client import ElevenLabs
 # from elevenlabs import save
-import openai
 import os
+
+import openai
 
 # elevenlabs = ElevenLabs(
 #     api_key=os.getenv("ELEVEN_API_KEY")
 # )
 
-narration_api = "openai" # (or "elevenlabs")
+narration_api = "openai"  # (or "elevenlabs")
+
 
 def parse(narration):
     data = []
     narrations = []
     lines = narration.split("\n")
     for line in lines:
-        if line.startswith('Narrator: '):
-            text = line.replace('Narrator: ', '')
-            data.append({
-                "type": "text",
-                "content": text.strip('"'),
-            })
+        if line.startswith("Narrator: "):
+            text = line.replace("Narrator: ", "")
+            data.append(
+                {
+                    "type": "text",
+                    "content": text.strip('"'),
+                }
+            )
             narrations.append(text.strip('"'))
-        elif line.startswith('['):
-            background = line.strip('[]')
-            data.append({
-                "type": "image",
-                "description": background,
-            })
+        elif line.startswith("["):
+            background = line.strip("[]")
+            data.append(
+                {
+                    "type": "image",
+                    "description": background,
+                }
+            )
     return data, narrations
+
 
 def create(data, output_folder):
     if not os.path.exists(output_folder):
@@ -58,9 +65,9 @@ def create(data, output_folder):
         #     save(audio, output_file)
 
         audio = openai.audio.speech.create(
-                input=element["content"],
-                model="tts-1-hd",
-                voice="alloy",
-            )
+            input=element["content"],
+            model="tts-1-hd",
+            voice="alloy",
+        )
 
         audio.stream_to_file(output_file)
