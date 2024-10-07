@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
-from openai import OpenAI
-import time
+import argparse
 import json
 import os
+import time
 
-import narration
-import images
-import video
-import utils
-import upload
-import argparse
 import dotenv
+from openai import OpenAI
+
+import images
+import narration
+import upload
+import utils
+import video
 
 dotenv.load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 def main(system_prompt, user_prompt=None, caption_settings={}):
 
@@ -31,19 +33,22 @@ def main(system_prompt, user_prompt=None, caption_settings={}):
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {
-                "role": "system",
-                "content": system_prompt
-            },
+            {"role": "system", "content": system_prompt},
             {
                 "role": "user",
-                "content": user_prompt if user_prompt else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
-            }
-        ]
+                "content": (
+                    user_prompt
+                    if user_prompt
+                    else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
+                ),
+            },
+        ],
     )
 
     response_text = response.choices[0].message.content
-    response_text.replace("’", "'").replace("`", "'").replace("…", "...").replace("“", '"').replace("”", '"')
+    response_text.replace("’", "'").replace("`", "'").replace("…", "...").replace(
+        "“", '"'
+    ).replace("”", '"')
 
     with open(os.path.join(basedir, "response.txt"), "w") as f:
         f.write(response_text)
@@ -65,7 +70,9 @@ def main(system_prompt, user_prompt=None, caption_settings={}):
     normalized_output_file = f"normalized_{output_file}"
     utils.normalize_sound(basedir, output_file, normalized_output_file)
 
-    print(f"DONE! Here's your generated video: {os.path.join(basedir, normalized_output_file)}")
+    print(
+        f"DONE! Here's your generated video: {os.path.join(basedir, normalized_output_file)}"
+    )
 
     print("Generating upload config...")
     upload_config_file = utils.generate_upload_config(basedir)
