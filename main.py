@@ -39,7 +39,7 @@ def main(system_prompt, user_prompt=None, caption_settings={}, image_svc="dall_e
                 "content": (
                     user_prompt
                     if user_prompt
-                    else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
+                    else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('pleasant_animals.txt')}"
                 ),
             },
         ],
