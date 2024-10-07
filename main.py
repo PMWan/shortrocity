@@ -18,7 +18,7 @@ dotenv.load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-def main(system_prompt, user_prompt=None, caption_settings={}):
+def main(system_prompt, user_prompt=None, caption_settings={}, image_svc="dall_e"):
 
     short_id = str(int(time.time()))
 
@@ -61,7 +61,7 @@ def main(system_prompt, user_prompt=None, caption_settings={}):
     narration.create(data, os.path.join(basedir, "narrations"))
 
     print("Generating images...")
-    images.create_from_data(data, os.path.join(basedir, "images"))
+    images.create_images_from_data(data, os.path.join(basedir, "images"), image_svc)
 
     print("Generating video...")
     video.create(narrations, basedir, output_file, caption_settings)
@@ -91,6 +91,12 @@ if __name__ == "__main__":
     parser.add_argument("--system_prompt", type=str, required=True)
     parser.add_argument("--user_prompt", type=str, required=False)
     parser.add_argument("--caption_settings", type=str, required=False)
+    parser.add_argument(
+        "--image_svc",
+        choices=["dall_e", "flux_schnell", "flux_pro"],
+        default="dall_e",
+        type=str,
+    )
     args = parser.parse_args()
 
     with open(args.system_prompt) as f:
@@ -103,4 +109,6 @@ if __name__ == "__main__":
         with open(args.caption_settings) as f:
             caption_settings = json.load(f)
 
-    main(system_prompt, user_prompt, caption_settings)
+    image_svc = args.image_svc
+
+    main(system_prompt, user_prompt, caption_settings, image_svc)
