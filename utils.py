@@ -1,27 +1,25 @@
+import json
+import os
 import random
 import subprocess
-import os
-from openai import OpenAI
-import json
+
 import dotenv
+from openai import OpenAI
+
+import constants
 
 dotenv.load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def pick_random_animal(file_path):
-    selected_animal = None
-    count = 0
-
-    # Open the file and iterate through each line
-    with open(file_path, 'r') as file:
-        for line in file:
-            count += 1
-            # Replace the currently selected animal with probability 1/count
-            if random.randint(1, count) == 1:
-                selected_animal = line.strip()
-
-    return selected_animal
+    with open(file_path, "r") as file:
+        animals = file.read().splitlines()
+    
+    if not animals:
+        return None
+    
+    return random.choice(animals)
 
 
 def normalize_sound(basedir, input_file, output_file):
@@ -29,11 +27,14 @@ def normalize_sound(basedir, input_file, output_file):
     output_file_path = os.path.join(basedir, output_file)
 
     ffmpeg_command = [
-        'ffmpeg',
-        '-i', input_file_path,
-        '-c:v', 'copy',
-        '-af', 'loudnorm=I=-14:TP=-2:LRA=11',
-        output_file_path
+        "ffmpeg",
+        "-i",
+        input_file_path,
+        "-c:v",
+        "copy",
+        "-af",
+        "loudnorm=I=-14:TP=-2:LRA=11",
+        output_file_path,
     ]
 
     subprocess.run(ffmpeg_command, capture_output=True)
@@ -43,7 +44,7 @@ def normalize_sound(basedir, input_file, output_file):
 
 def generate_upload_config(basedir):
 
-    with open(os.path.join(basedir, "response.txt"), 'r') as file:
+    with open(os.path.join(basedir, "response.txt"), "r") as file:
         script = file.read()
 
     response = client.chat.completions.create(
@@ -51,16 +52,16 @@ def generate_upload_config(basedir):
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant that generates catchy YouTube short titles and descriptions."
+                "content": "You are a helpful assistant that generates catchy YouTube short titles and descriptions.",
             },
             {
                 "role": "user",
                 "content": f"Please generate a catchy title and description for the following youtube short script: {script}. "
                 "Include relevant emojis at the end of the title and description. "
-                "Return the title and description as valid JSON."
-            }
+                "Return the title and description as valid JSON.",
+            },
         ],
-        response_format={ "type": "json_object" }
+        response_format={"type": "json_object"},
     )
 
     response_text = response.choices[0].message.content
@@ -72,11 +73,12 @@ def generate_upload_config(basedir):
         print("Failed to parse JSON:", e)
         # You may need to clean or correct the response to extract valid JSON
 
-    print(config)
-
     config["file_path"] = os.path.join(basedir, "normalized_short.avi")
     config["category"] = "15"
     config["privacy_status"] = "private"
+    config["description"] = f"{config['description']}\n\n{constants.DISCLAIMER}"
+
+    print(config)
 
     with open(os.path.join(basedir, "upload_config.json"), "w") as f:
         json.dump(config, f)
