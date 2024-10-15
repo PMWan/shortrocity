@@ -1,1 +1,1 @@
-DISCLAIMER = "Credit: Narration and images created using AI tools."
+DISCLAIMER = "Credit: Narration and images created using Gen AI tools."
