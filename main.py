@@ -24,6 +24,8 @@ def main(system_prompt, user_prompt=None, caption_settings={}, image_svc="dall_e
 
     output_file = "short.avi"
 
+    youtube = upload.get_authenticated_service()
+
     basedir = os.path.join("shorts", short_id)
     if not os.path.exists(basedir):
         os.makedirs(basedir)
@@ -39,7 +41,7 @@ def main(system_prompt, user_prompt=None, caption_settings={}, image_svc="dall_e
                 "content": (
                     user_prompt
                     if user_prompt
-                    else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt')}"
+                    else f"Create a YouTube narration about the following animal:{utils.pick_random_animal('animals.txt', youtube)}"
                 ),
             },
         ],
@@ -78,7 +80,7 @@ def main(system_prompt, user_prompt=None, caption_settings={}, image_svc="dall_e
     upload_config_file = utils.generate_upload_config(basedir)
 
     print("Uploading video...")
-    youtube = upload.get_authenticated_service()
+
     config = upload.load_config(upload_config_file)
     if upload.upload_video(youtube, config) is True:
         print(f"DONE! Uploaded video to YouTube")

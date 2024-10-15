@@ -7,19 +7,65 @@ import dotenv
 from openai import OpenAI
 
 import constants
+import upload
 
 dotenv.load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-def pick_random_animal(file_path):
-    with open(file_path, "r") as file:
-        animals = file.read().splitlines()
-    
-    if not animals:
+def get_uploaded_video_titles(youtube):
+    uploads_playlist_id = upload.get_uploads_playlist_id(youtube)
+    if not uploads_playlist_id:
+        return []
+
+    titles = []
+    next_page_token = None
+
+    while True:
+        playlist_items_response = (
+            youtube.playlistItems()
+            .list(
+                part="snippet",
+                playlistId=uploads_playlist_id,
+                maxResults=50,
+                pageToken=next_page_token,
+            )
+            .execute()
+        )
+
+        for item in playlist_items_response["items"]:
+            titles.append(item["snippet"]["title"])
+
+        next_page_token = playlist_items_response.get("nextPageToken")
+        if not next_page_token:
+            break
+
+    return titles
+
+
+def filter_animals(animals_file_path, youtube):
+    with open(animals_file_path, "r") as file:
+        all_animals = set(file.read().splitlines())
+
+    uploaded_titles = get_uploaded_video_titles(youtube)
+    used_animals = set()
+
+    for title in uploaded_titles:
+        title_lower = title.lower()
+        for animal in all_animals:
+            if animal.lower() in title_lower:
+                used_animals.add(animal)
+
+    return list(all_animals - used_animals)
+
+
+def pick_random_animal(file_path, youtube):
+    filtered_animals = filter_animals(file_path, youtube)
+
+    if not filtered_animals:
         return None
-    
-    return random.choice(animals)
+
+    return random.choice(filtered_animals)
 
 
 def normalize_sound(basedir, input_file, output_file):
