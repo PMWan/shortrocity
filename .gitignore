@@ -9,3 +9,4 @@ venv
 *secrets*
 *.pickle
 .env
+.DS_Store
