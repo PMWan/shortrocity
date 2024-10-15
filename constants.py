@@ -1,3 +1,1 @@
-DISCLAIMER = (
-    "Note: The narration and images in this video were created with help from AI tools."
-)
+DISCLAIMER = "Credit: Narration and images created using AI tools."
