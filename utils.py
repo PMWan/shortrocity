@@ -74,6 +74,7 @@ def normalize_sound(basedir, input_file, output_file):
 
     ffmpeg_command = [
         "ffmpeg",
+        "-y",
         "-i",
         input_file_path,
         "-c:v",
