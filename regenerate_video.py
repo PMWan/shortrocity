@@ -83,10 +83,10 @@ if __name__ == "__main__":
     print("Regenerating upload config...")
     upload_config_file = utils.generate_upload_config(basedir)
 
-    # print("Uploading video...")
-    # youtube = upload.get_authenticated_service()
-    # config = upload.load_config(upload_config_file)
-    # if upload.upload_video(youtube, config) is True:
-    #     print(f"DONE! Uploaded video to YouTube")
-    # else:
-    #     print(f"FAILED! Failed to upload video to YouTube")
+    print("Uploading video...")
+    youtube = upload.get_authenticated_service()
+    config = upload.load_config(upload_config_file)
+    if upload.upload_video(youtube, config) is True:
+        print(f"DONE! Uploaded video to YouTube")
+    else:
+        print(f"FAILED! Failed to upload video to YouTube")
