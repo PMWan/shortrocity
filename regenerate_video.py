@@ -55,8 +55,8 @@ if __name__ == "__main__":
         with open(args.caption_settings) as f:
             caption_settings = json.load(f)
 
-    print("Regenerating images...")
     if args.regenerate_images:
+        print("Regenerating images...")
         data = json.load(open(os.path.join(basedir, "data.json")))
         images.create_images_from_data(
             data, os.path.join(basedir, "images"), args.image_svc
